@@ -37,70 +37,104 @@ class Map():
         self.players_room = None
 
     def start_game(self):
-        unused_rooms = set(GRAF.keys())
+        _unused_rooms = set(GRAF.keys())
         #set vampus
-        self.vampuses_room = random.choice(list(unused_rooms))
-        unused_rooms.discard(self.vampuses_room)
+        self.vampuses_room = random.choice(list(_unused_rooms))
+        _unused_rooms.discard(self.vampuses_room)
         
         #set bats
         for i in range(0, BATS):
-            room = random.choice(list(unused_rooms))
+            room = random.choice(list(_unused_rooms))
             self.bats.append(room)
-            unused_rooms.discard(room)
+            _unused_rooms.discard(room)
             
         #set deeps
         for i in range(0, DEEPS):
-            room = random.choice(list(unused_rooms))
+            room = random.choice(list(_unused_rooms))
             self.deeps.append(room)
-            unused_rooms.discard(room)
+            _unused_rooms.discard(room)
         
         #set player in room, where not vampus, bats, deeps, and bad neighbors ))
         #найти хорошие комнаты (не соседствующие с ямами, вампусом и мышами)
         #найти комнаты, где уже ктото есть
-        used_rooms = set(GRAF.keys()).difference(unused_rooms)
+        _used_rooms = set(GRAF.keys()).difference(_unused_rooms)
         
-        for i in used_rooms:
+        for i in _used_rooms:
             for k in GRAF[i]:
-                unused_rooms.discard(k)
-        self.players_room = random.choice(list(unused_rooms))
+                _unused_rooms.discard(k)
+
+        self.players_room = random.choice(list(_unused_rooms))
         
         for i in GRAF.keys():
             self.maze[i] = Room(room_number=i, 
             next_room=GRAF[i])
+
         for i in self.deeps:
             self.maze[i].deep = True
+
         for i in self.bats:
             self.maze[i].bat = True
+
+    def get_smell(self, room):
+        for i in self.maze[room].next_room:
+            if i == self.vampuses_room:
+                return True
+        return False
         
 
+    def get_breeze(self, room):
+        #получаем информацию, есть ли тут ветерок. Берем как положено, из Room
+        for i in self.maze[room].next_room:
+            if self.maze[i].deep == True:
+                return True
+        return False
+        
+
+    def get_noise(self, room):
+        for i in self.maze[room].next_room:
+            if self.maze[i].bat == True:
+                return True
+        return False
+        
+        pass
+
+
+
 class Room():
+
     def __init__(self, room_number:int, next_room:set) -> None:
         self.room_number = room_number
         self.next_room = next_room
         self.deep = False
         self.bat = False
-        self.vampus_is_here = False #посмотрим, может я ее удалю
-    def get_smell(self) -> bool:
-        #if in next rooms is vampus, ruturn true else False 
-        pass
-    def get_breeze(self) -> bool:
-        #if in next rooms have a deep, return True
-        pass
-
-    def get_rustle(self):
-        #if next_room have a bat, return True
-        pass
+    pass
 
     
 
 class Player():
-    def __init__(self, arrows:int, room: int, life:1 = 1):
+    def __init__(self, arrows:int, map: object, life:int = 1,):
         self.arrows = arrows
-        self.room = room
+        #self.room = room
         self.life = life
+    
+    def fire(self):
+        pass
+
+
+    def get_next_rooms(self):
+        pass
+
+    def move(self):
+        pass
+
 
     pass
 
 class Vampus():
+
+    def fear_arrow():
+        pass
+
+
     pass
 
