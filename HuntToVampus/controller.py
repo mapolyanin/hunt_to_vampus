@@ -18,22 +18,38 @@ class ConsolController():
                        breeze:bool):
         print(replic['room'].format(room))
         print(replic['next_room'].format(target))
-        pass
+        if smell:
+            print (replic['smell'])
+        if noise:
+            print(replic['noise'])
+        if breeze:
+            print(replic['breeze'])
+        print('\n')
 
     def ask_action(self, room, target) -> dict:
         move = False
         fire = False
-        target = None
+        self.target = None
 
-        while (move or fire):
+        while not(move or fire):
 
-            _action = input(replic['action_ask']).lower()
+            _action = input(replic['action_ask']).lower
             if _action in {'m', 'м'}:
                 move = True
             elif _action in {'f'}:
                 fire = True
             else:
                 print(replic['wrong_answer'])
+        if move == True:
+            while True:
+                _target = input(replic['move_ask']).lower
+                if is+* _target
+
+
+
+            
+
+
 
         return {"move": move, "fire": fire, "target":target}
             

@@ -22,7 +22,7 @@ if __name__ == "__main__":
         controller.status_message(this_room, target, smell=smell, noise=noize, breeze=breeze)
         action = controller.ask_action(this_room, target)
         result = map.action()
-        controller.event_message(result)
+        #controller.event_message(result)
         if player.life == 0:
             controller.lose()
             break
