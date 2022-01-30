@@ -33,6 +33,7 @@ class Map():
         self.maze = dict()
         self.deeps = []
         self.bats = []
+        self.vampus_died = False
         self.vampuses_room = None
         self.players_room = None
 
@@ -96,6 +97,10 @@ class Map():
                 return True
         return False
         
+    def action(self):
+        pass
+
+    def game_over(self):
         pass
 
 
@@ -117,7 +122,8 @@ class Player():
         #self.room = room
         self.life = life
     
-    def fire(self):
+    def fire(self, map, room):
+        
         pass
 
 
@@ -134,7 +140,7 @@ class Vampus():
 
     def fear_arrow():
         pass
+    
 
-
+class Logic():
     pass
-

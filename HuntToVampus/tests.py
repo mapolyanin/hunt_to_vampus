@@ -1,4 +1,7 @@
 from models import *
+from controller import *
+
+
 def graf_test():
     for i in GRAF:
         for k in GRAF[i]:
@@ -20,9 +23,16 @@ def test_Map(map):
 
 
 
+
 if (__name__ == "__main__"):
     map = Map()
     graf_test()
     test_Map(map)
-    player = Player(5, 18, map, 1)
-    
+    player = Player(5, map, 1)
+    print(replic['room'].format("1"))
+    print(replic['bat'].format('3'))
+    print(map.maze[18].next_room)
+    target = map.maze[1].next_room
+    print(target)
+
+
