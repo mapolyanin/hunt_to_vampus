@@ -12,16 +12,16 @@ if __name__ == "__main__":
     while game_is_run:
 
         this_room = map.players_room
-        
         target = map.maze[this_room].next_room
-
         smell = map.get_smell(room=this_room)
         breeze = map.get_breeze(room=this_room)
         noize = map.get_noise(room=this_room)
+        arrows =map.arrows
 
-        controller.status_message(this_room, target, smell=smell, noise=noize, breeze=breeze)
+        controller.status_message(this_room, target, smell=smell, noise=noize, breeze=breeze, arrow=arrows)
         action = controller.ask_action(this_room, target)
         result = map.action()
+        
         #controller.event_message(result)
         if player.life == 0:
             controller.lose()
@@ -30,4 +30,4 @@ if __name__ == "__main__":
             controller.win()
             break
 
-        break
+        

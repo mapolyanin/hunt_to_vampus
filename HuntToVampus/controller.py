@@ -1,5 +1,6 @@
 
 import json
+import re
 ru_replics = json.load(open("lang/ru-ru.json"))
 #ru_lang = json.loads(ru_json)
 replic = ru_replics
@@ -15,9 +16,12 @@ class ConsolController():
 
     def status_message(self, room:int, target:set,
                        smell:bool, noise:bool, 
-                       breeze:bool):
+                       breeze:bool, arrow:int):
+
         print(replic['room'].format(room))
         print(replic['next_room'].format(target))
+        print(replic['arrow_limit'].format(arrow))
+
         if smell:
             print (replic['smell'])
         if noise:
@@ -33,36 +37,37 @@ class ConsolController():
 
         while not(move or fire):
 
-            _action = input(replic['action_ask']).lower
+            _action = input(replic['action_ask']).lower()
+            print(_action)
             if _action in {'m', 'м'}:
                 move = True
+
             elif _action in {'f'}:
                 fire = True
             else:
                 print(replic['wrong_answer'])
-        if move == True:
-            while True:
-                _target = input(replic['move_ask']).lower
-                if is+* _target
+        
+        while True:
+            if move:
+                print(replic['move_ask'])
+            elif fire:
+                print(replic['fire_ask'])
+
+            _target = input(replic['say_room'])
+
+            if _target.isdigit():
+                if int(_target) in target:
+                    self.target = _target
+                    break
+                else:
+                    print(replic['wrong_answer'])
+
+            else:
+                print(replic['wrong_answer'])
+                continue
 
 
-
-            
-
-
-
-        return {"move": move, "fire": fire, "target":target}
-            
-
-
-
-
-
-    def ask_move(self, room, target):
-        pass
-
-    def ask_fire(self, room, target):
-        pass
+        return {"move": move, "fire": fire, "target":target}           
 
     def event_message(self):
         pass

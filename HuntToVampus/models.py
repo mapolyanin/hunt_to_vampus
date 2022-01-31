@@ -36,6 +36,7 @@ class Map():
         self.vampus_died = False
         self.vampuses_room = None
         self.players_room = None
+        self.arrows = ARROWS
 
     def start_game(self):
         _unused_rooms = set(GRAF.keys())
@@ -106,17 +107,34 @@ class Map():
 
 
 class Room():
-
+    """Data-class for data about room"""
     def __init__(self, room_number:int, next_room:set) -> None:
         self.room_number = room_number
         self.next_room = next_room
         self.deep = False
         self.bat = False
-    pass
-
     
 
-class Player():
+class Unit():
+    def __init__(self, map):
+        self.position = None
+        self.live = True
+        self.map = map
+
+    def move(self, target):
+        pass
+    
+    def next_rooms(self):
+        pass
+
+    def fire(self):
+        pass
+
+    def random_move(self, target, limit):
+        pass
+
+    
+class Player(Unit):
     def __init__(self, arrows:int, map: object, life:int = 1,):
         self.arrows = arrows
         #self.room = room
@@ -136,10 +154,11 @@ class Player():
 
     pass
 
-class Vampus():
+class Vampus(Unit()):
 
-    def fear_arrow():
-        pass
+    def fear_arrow(self):
+        if random.choice([1,2,3,4]) == 1:
+           self.random_move()
     
 
 class Logic():
