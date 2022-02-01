@@ -1,44 +1,38 @@
-from models import *
-from controller import *
+"""Start module. Jast type: python3 main.py"""
+
+from models import Map
+from controller import ConsolController
 
 if __name__ == "__main__":
-    map = Map()
-    map.start_game()
-    player = Player(arrows=7, map = map, life=1)
+    game_map = Map()
+    game_map.start_game()
     controller = ConsolController()
     game_is_run = True
     controller.start_message()
- 
+
     while game_is_run:
+        #get state of game
+        this_room = game_map.players_room
+        target = game_map.maze[this_room].next_room
+        smell = game_map.get_smell(room=this_room)
+        breeze = game_map.get_breeze(room=this_room)
+        noize = game_map.get_noise(room=this_room)
+        arrows =game_map.arrows
 
-        this_room = map.players_room
-        target = map.maze[this_room].next_room
-        smell = map.get_smell(room=this_room)
-        breeze = map.get_breeze(room=this_room)
-        noize = map.get_noise(room=this_room)
-        arrows =map.arrows
-
-        controller.status_message(this_room, target, smell=smell, noise=noize, breeze=breeze, arrow=arrows)
-        action = controller.ask_action(this_room, target)
-        result = map.action(**action)
+        controller.status_message(this_room, target, smell=smell,
+        noise=noize, breeze=breeze, arrow=arrows)
+        action = controller.ask_action(target)
+        result = game_map.action(**action)
         controller.event_message(**result)
-        
-        #print('debag_info: ')
-        #print (result)
-        #print('bats: {}'.format(map.bats),
-        # "\n", 'deeps: ', map.deeps, 'vampus: ', map.vampuses_room, "\n")
 
-        #controller.event_message(result)
         if result['player_died']:
             print('Game over')
             #controller.lose()
-            break
+            game_is_run = False
         if result['vampus_died']:
             print('You win! \nGame over')
             #controller.win()False
-            break
+            game_is_run = False
         if result['no_arrows']:
             print('Game over')
-            break
-
-        
+            game_is_run = False

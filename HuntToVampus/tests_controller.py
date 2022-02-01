@@ -7,13 +7,12 @@ map.start_game()
 controller = ConsolController()
 
 def test_start_message():
-    
     assert controller.start_message()== None
 
 
 def test_status_message():
     for i in range(1, 21):
-        controller.status_message(i, map.maze[i].next_room, 
+        controller.status_message(i, map.maze[i].next_room,
         map.get_smell(i), map.get_noise(i), map.get_breeze(i))
 
 def test_ask_action():

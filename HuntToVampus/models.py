@@ -1,5 +1,7 @@
+"""This modul is main modul in 'Hunter to Vampus' game.
+
+"""
 import random
-from shutil import move
 
 #map of game.
 GRAF = {
@@ -31,9 +33,40 @@ DEEPS = 2
 random.seed(1000) #comment this after debugging and refactoring
 
 class Map():
+    """This is main class of game.
+    Atributes
+    ----------
+    maze: set
+        set objects Room
+    deeps: list
+        list for temporaly storage rooms with deep.
+    bats: list
+        list for temporaly storage rooms with bats.
+    vampuses_room: int
+        storage for position of Vampus.
+    players_room: int
+        storage fo position of Player.
+    arrow: int:
+        storage for arrow.
+    Methods
+    -------
+    __init__()
+        create object Maze
+
+    start_game():
+        create maze from GRAF, take and storage position for Vampus, bats,
+        deep and Player.
+
+    get_smell(room:int) -> bool
+    get_noise(room:int) -> bool
+    get_breeze(room:int) -> bool
+
+        get info about deeps, bats and Vampus in next room.
+
+    action(fire:bool, move:bool, target:int)
+        reaction game on action of Player
     """
-    This is main class of game. 
-    """
+
     def __init__(self):
         self.maze = dict()
         self.deeps = []
@@ -48,35 +81,35 @@ class Map():
         this metod MAST be called before game
         """
         _unused_rooms = set(GRAF.keys())
-        #set vampus
+        #set vampus position
         self.vampuses_room = random.choice(list(_unused_rooms))
         _unused_rooms.discard(self.vampuses_room)
-        
-        #set bats
+
         for i in range(0, BATS):
+            #set bats position
             room = random.choice(list(_unused_rooms))
             self.bats.append(room)
             _unused_rooms.discard(room)
-            
+
         #set deeps
         for i in range(0, DEEPS):
             room = random.choice(list(_unused_rooms))
             self.deeps.append(room)
             _unused_rooms.discard(room)
-        
+
         #set player in room, where not vampus, bats, deeps, and bad neighbors ))
         #найти хорошие комнаты (не соседствующие с ямами, вампусом и мышами)
         #найти комнаты, где уже ктото есть
         _used_rooms = set(GRAF.keys()).difference(_unused_rooms)
-        
+
         for i in _used_rooms:
             for k in GRAF[i]:
                 _unused_rooms.discard(k)
 
         self.players_room = random.choice(list(_unused_rooms))
-        
+
         for i in GRAF.keys():
-            self.maze[i] = Room(room_number=i, 
+            self.maze[i] = Room(room_number=i,
             next_room=GRAF[i])
 
         for i in self.deeps:
@@ -89,31 +122,31 @@ class Map():
         """
         Call this metod for smelled vampus
         """
+
         for i in self.maze[room].next_room:
             if i == self.vampuses_room:
                 return True
         return False
-        
 
     def get_breeze(self, room:int) -> bool:
         """
         Call this metod for feel breeze... from deep
         """
         for i in self.maze[room].next_room:
-            if self.maze[i].deep == True:
+            if self.maze[i].deep:
                 return True
         return False
-        
+
 
     def get_noise(self, room):
         """
         Call this metod to hear the noize from bat
         """
         for i in self.maze[room].next_room:
-            if self.maze[i].bat == True:
+            if self.maze[i].bat:
                 return True
         return False
-        
+
     def action(self, fire:bool, move:bool, target:int):
         """
         This metod return result of users action.
@@ -122,18 +155,18 @@ class Map():
         """
 
         #this stait after action
-        self.result = {'vampus_died':False,
-                   'player_died':False, 
+        result = {'vampus_died':False,
+                   'player_died':False,
                    'win':False,
-                   'lose':False, 
-                   'bat_detect':False, 
+                   'lose':False,
+                   'bat_detect':False,
                    'deep_detect':False,
                    'empty_room': False,
                    'bat_transfer':0,
-                   'player_meet_vampus':False, 
+                   'player_meet_vampus':False,
                    'vampus_meet_player':False,
                    'deep': False,
-                   'no_arrows': False, 
+                   'no_arrows': False,
                    'vampus_fear':False
                    }
 
@@ -153,7 +186,6 @@ class Map():
         if move:
             #move_player in next room
             self.players_room = target
-        
         if self.maze[self.players_room].bat:
             #action, if in new room live bat
             while True:
@@ -163,41 +195,40 @@ class Map():
                 else:
                     self.players_room = new_room.room_number
                     break
-            self.result['bat_transfer'] = new_room.room_number
-        
+            result['bat_transfer'] = new_room.room_number
+
         if self.players_room == self.vampuses_room:
-            self.result['player_meet_vampus'] = True
-            self.result['player_died'] = True
-        
+            result['player_meet_vampus'] = True
+            result['player_died'] = True
 
         if self.maze[self.players_room].deep:
             #player is died in deep
-            self.result['deep'] = True
-            self.result['player_died'] = True
-            self.result['lose'] = True
+            result['deep'] = True
+            result['player_died'] = True
+            result['lose'] = True
 
         if fire:
             #if player fired
             self.arrows -=1
             if target == self.vampuses_room:
                 #we died vampus!
-                self.result ['vampus_died'] = True
-                self.result['win'] = True
+                result ['vampus_died'] = True
+                result['win'] = True
             elif self.maze[target].bat:
                 #bat detect in target room
-                self.result ['bat_detect']= True
+                result ['bat_detect']= True
             elif self.maze[target].deep:
                 #deep detect in target room
-                self.result ['deep_detect']=True
+                result ['deep_detect']=True
             else:
                 #empty room
-                self.result['empty_room']=True
-            
+                result['empty_room']=True
 
-            #vampus wake up after fire...may be 
+            #vampus wake up after fire...may be
             if random.choice(range(0,4)) in [0,1]:
-                self.result['vampus_fear'] = True
-                #перемещаем вампуса в соседнюю комнату. Если там мыши или пропасть, он там спать не будет, и пойдет дальше.
+                result['vampus_fear'] = True
+                #перемещаем вампуса в соседнюю комнату. Если там мыши или пропасть,
+                #он там спать не будет, и пойдет дальше.
                 while True:
                     new_room = random.choice(list(self.maze[self.vampuses_room].next_room))
                     self.vampuses_room = new_room
@@ -207,117 +238,25 @@ class Map():
                         break
                 if self.vampuses_room == self.players_room:
                     #player is tourist breakfast for vampus
-                    self.result['vampus_meet_player'] = True
-                    self.result['player_died'] = True
-                    self.result['lose'] = True
-        
-            
+                    result['vampus_meet_player'] = True
+                    result['player_died'] = True
+                    result['lose'] = True
+
+
         if self.arrows == 0:
             #if arrows is out, game is over
-            
-            self.result['no_arrows'] = True
-            self.result['lose'] = True
-               
-        return self.result
 
-        """
-        Принимает действие пользователя из основного модуля, проверяет на валидность, возвращает словарь с результатом действия.byb
-        Принимаемые значения:
-        {'move':bool, 'fire':bool, target:int}
-        Возвращаемое значение:
-        {vampus_died:bool, player_died:bool, win:bool, 
-        lose:bool, bat_detect:bool, deep_detect:bool, bat_transfer:int,
-        player_meet_vampus:bool, vampus_meet_player:bool} 
-        или 
-        None если переданы некорректные данные.
-
-        Возможная реакция системы:
-        Пользователь в комнате летучих мышей. Летучаея мышь переносит пользователя в случайную другую комнату. Проверка условий продолжается.
-        Пользователь в комнате вампуса. Вампус убивает пользователя. Игра окончена.
-        Пользователь в комнате с пропастью. Пользователь погибает. Игра окончена.
-        Пользователь стреляет в комнату с вампусом. Вампус погибает. Игрок побеждает.
-        Пользователь стреляет в комнату с мышью. Получает шум. Стрелы -=1
-        Пользователь стреляет в комнату с пропастью. Получает потерю стрелы. Стрелы -=1
-        Пользователь стреляет в пустую комнату. Стрелы -=-1.
-        Если стрелы кончились, то Игра окончена.
-        Услышав выстрел, вампус перемещается в соседнюю комнату.
-        Если вампус оказыватся в комнате с игроком, игра окончена.       
-        Пользователь в пустой комнате. Завершение действия.
-        
-        """
-
-
+            result['no_arrows'] = True
+            result['lose'] = True
+        return result
 
 class Room():
     """
     Data-class for data about room
-    
+
     """
     def __init__(self, room_number:int, next_room:set) -> None:
         self.room_number = room_number
         self.next_room = next_room
         self.deep = False
         self.bat = False
-    
-
-class Unit():
-    """
-    Неиспользуемый класс, при расширении функциональности, он него можно наследовать класс Player и класс Vampus
-
-    """
-    def __init__(self, map):
-        self.position = None
-        self.live = True
-        self.map = map
-
-    def move(self, target):
-        pass
-    
-    def next_rooms(self):
-        pass
-
-    def fire(self):
-        pass
-
-    def random_move(self, target, limit):
-        pass
-
-    
-class Player(Unit):
-    """
-    Неиспользуемый класс. Здесь можно хранить состояние героя, а так же двигать его и стрелять, но проще оказалось все это
-    оставить в основном классе игры.
-    """
-    def __init__(self, arrows:int, map: object, life:int = 1,):
-        self.arrows = arrows
-        #self.room = room
-        self.life = life
-    
-    def fire(self, map, room):
-        
-        pass
-
-    def get_next_rooms(self):
-        pass
-
-    def move(self):
-        pass
-
-
-    pass
-
-
-class Vampus(Unit):
-    """
-    Неиспользуемый класс для вампуса, возможно пригодится при расщирении функционала
-    """
-    def fear_arrow(self):
-        if random.choice([1,2,3,4]) == 1:
-           self.random_move()
-    
-
-class Logic():
-    """ 
-    Логику можно (было бы) переместить сюда, но пока она в методе Map.action()
-    """
-    pass

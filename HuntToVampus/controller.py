@@ -1,19 +1,27 @@
+"""This is controller module.
 
+Now in this module only consol controller and Russian. New controllers coming soon.
+Text imported from  lang/*.json
+"""
 import json
-import re
-ru_replics = json.load(open("lang/ru-ru.json"))
-#ru_lang = json.loads(ru_json)
-replic = ru_replics
+
+with open("lang/ru-ru.json", 'r', encoding='utf-8') as file:
+    ru_replics = json.load(file)
+    replic = ru_replics
 
 
 class ConsolController():
+    """Class for console gamind in Hunt to Vampus"""
+
     def start_message(self):
+        """Print start message of game"""
         print(replic["start"])
-        pass
+
 
     def status_message(self, room:int, target:set,
-                       smell:bool, noise:bool, 
+                       smell:bool, noise:bool,
                        breeze:bool, arrow:int):
+        """Method for printing status message"""
 
         print(replic['room'].format(room))
         print(replic['next_room'].format(target))
@@ -27,7 +35,8 @@ class ConsolController():
             print(replic['breeze'])
         print('\n')
 
-    def ask_action(self, room, target) -> dict:
+    def ask_action(self, target:set) -> dict:
+        """Method for input from Player"""
         move = False
         fire = False
         self.target = None
@@ -42,7 +51,7 @@ class ConsolController():
                 fire = True
             else:
                 print(replic['wrong_answer'])
-        
+
         while True:
             if move:
                 print(replic['move_ask'])
@@ -62,22 +71,16 @@ class ConsolController():
                 print(replic['wrong_answer'])
                 continue
 
-        return {"move": move, "fire": fire, "target":self.target} 
-
+        return {"move": move, "fire": fire, "target":self.target}
 
     def event_message(self, **kwards):
-        
+        """Print reaction of game on Player"""
+
         if kwards['vampus_died']:
             print(replic['vampus_died'])
 
-        #if kwards ['player_died']:
-        #    print('Написать реплику')
-
         if kwards['win']:
             print(replic['win'])
-
-        #if kwards['lose']:
-        #    print('Написать реплику') 
 
         if kwards['bat_detect']:
             print(replic['arrow_and_bat'])
@@ -87,7 +90,7 @@ class ConsolController():
 
         if kwards['empty_room']:
             print(replic["empty_room"])
-        
+
         if kwards['vampus_fear']:
             print(replic['vampus_move'])
 
@@ -103,7 +106,6 @@ class ConsolController():
             print(replic['lose'])
 
         if kwards['vampus_meet_player']:
-            
             print(replic["vampus_move_in_your_room"])
             print(replic['lose'])
 
@@ -114,13 +116,3 @@ class ConsolController():
         if kwards['no_arrows']:
             print(replic["no_arrows"])
             print(replic["lose"])
-
-        #print(kwards)
-        #pass
-
-    #def lose():
-    #   pass
-
-    #def win():
-    #    print(replic["win"])
-        
