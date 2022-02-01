@@ -20,14 +20,25 @@ if __name__ == "__main__":
 
         controller.status_message(this_room, target, smell=smell, noise=noize, breeze=breeze, arrow=arrows)
         action = controller.ask_action(this_room, target)
-        result = map.action()
+        result = map.action(**action)
+        controller.event_message(**result)
         
+        #print('debag_info: ')
+        #print (result)
+        #print('bats: {}'.format(map.bats),
+        # "\n", 'deeps: ', map.deeps, 'vampus: ', map.vampuses_room, "\n")
+
         #controller.event_message(result)
-        if player.life == 0:
-            controller.lose()
+        if result['player_died']:
+            print('Game over')
+            #controller.lose()
             break
-        if map.vampus_died:
-            controller.win()
+        if result['vampus_died']:
+            print('You win! \nGame over')
+            #controller.win()False
+            break
+        if result['no_arrows']:
+            print('Game over')
             break
 
         

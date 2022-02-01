@@ -11,9 +11,6 @@ class ConsolController():
         print(replic["start"])
         pass
 
-    def game_over_message(self):
-        pass
-
     def status_message(self, room:int, target:set,
                        smell:bool, noise:bool, 
                        breeze:bool, arrow:int):
@@ -38,7 +35,6 @@ class ConsolController():
         while not(move or fire):
 
             _action = input(replic['action_ask']).lower()
-            print(_action)
             if _action in {'m', 'м'}:
                 move = True
 
@@ -57,7 +53,7 @@ class ConsolController():
 
             if _target.isdigit():
                 if int(_target) in target:
-                    self.target = _target
+                    self.target = int(_target)
                     break
                 else:
                     print(replic['wrong_answer'])
@@ -66,15 +62,65 @@ class ConsolController():
                 print(replic['wrong_answer'])
                 continue
 
+        return {"move": move, "fire": fire, "target":self.target} 
 
-        return {"move": move, "fire": fire, "target":target}           
 
-    def event_message(self):
-        pass
+    def event_message(self, **kwards):
+        
+        if kwards['vampus_died']:
+            print(replic['vampus_died'])
 
-    def lose():
-        pass
+        #if kwards ['player_died']:
+        #    print('Написать реплику')
 
-    def win():
-        print(replic["win"])
+        if kwards['win']:
+            print(replic['win'])
+
+        #if kwards['lose']:
+        #    print('Написать реплику') 
+
+        if kwards['bat_detect']:
+            print(replic['arrow_and_bat'])
+
+        if kwards['deep_detect']:
+            print(replic['arrow_down'])
+
+        if kwards['empty_room']:
+            print(replic["empty_room"])
+        
+        if kwards['vampus_fear']:
+            print(replic['vampus_move'])
+
+        if kwards['bat_transfer']:
+            print(replic["bat"].format(kwards['bat_transfer']))
+
+        if (kwards['bat_transfer'] and kwards['deep']):
+            print(replic['bat_and_deep'])
+            print(replic['lose'])
+
+        if kwards['player_meet_vampus']:
+            print(replic["you_move_in_vampuses_room"])
+            print(replic['lose'])
+
+        if kwards['vampus_meet_player']:
+            
+            print(replic["vampus_move_in_your_room"])
+            print(replic['lose'])
+
+        if kwards['deep']:
+            print(replic["deep"])
+            print(replic['lose'])
+
+        if kwards['no_arrows']:
+            print(replic["no_arrows"])
+            print(replic["lose"])
+
+        #print(kwards)
+        #pass
+
+    #def lose():
+    #   pass
+
+    #def win():
+    #    print(replic["win"])
         
