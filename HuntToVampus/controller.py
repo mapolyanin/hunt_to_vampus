@@ -16,7 +16,7 @@ class ConsolController():
     def start_message(self):
         """Print start message of game"""
         print(replic["start"])
-
+        print('\n')
 
     def status_message(self, room:int, target:set,
                        smell:bool, noise:bool,
@@ -75,7 +75,7 @@ class ConsolController():
 
     def event_message(self, **kwards):
         """Print reaction of game on Player"""
-
+        print('\n')
         if kwards['vampus_died']:
             print(replic['vampus_died'])
 
@@ -116,3 +116,4 @@ class ConsolController():
         if kwards['no_arrows']:
             print(replic["no_arrows"])
             print(replic["lose"])
+        print('\n')

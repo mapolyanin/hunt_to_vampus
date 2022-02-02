@@ -128,6 +128,17 @@ class Map():
                 return True
         return False
 
+    def get_state(self):
+        """This method return state of game before Players something do. """
+
+        this_room = self.players_room
+        target = self.maze[self.players_room].next_room
+        smell = self.get_smell(self.players_room)
+        noise = self.get_noise(self.players_room)
+        breeze = self.get_breeze(self.players_room)
+        return {'room': self.players_room, 'target':target, 'smell':smell, 'noise':noise, 'breeze':breeze, 'arrow':self.arrows}
+        pass
+
     def get_breeze(self, room:int) -> bool:
         """
         Call this metod for feel breeze... from deep
@@ -225,7 +236,7 @@ class Map():
                 result['empty_room']=True
 
             #vampus wake up after fire...may be
-            if random.choice(range(0,4)) in [0,1]:
+            if (random.choice(range(0,4)) in [0,1] and not result['vampus_died']):
                 result['vampus_fear'] = True
                 #перемещаем вампуса в соседнюю комнату. Если там мыши или пропасть,
                 #он там спать не будет, и пойдет дальше.
