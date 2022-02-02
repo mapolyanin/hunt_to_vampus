@@ -6,16 +6,16 @@ Text imported from  lang/*.json
 import json
 
 with open("lang/ru-ru.json", 'r', encoding='utf-8') as file:
-    ru_replics = json.load(file)
-    replic = ru_replics
+    ru_replicas = json.load(file)
+    replicas = ru_replicas
 
 
-class ConsolController():
-    """Class for console gamind in Hunt to Vampus"""
-
-    def start_message(self):
+class ConsoleController:
+    """Class for console gamind in Hunt to wumpus"""
+    @staticmethod
+    def start_message():
         """Print start message of game"""
-        print(replic["start"])
+        print(replicas["start"])
         print('\n')
 
     def status_message(self, room:int, target:set,
@@ -23,16 +23,16 @@ class ConsolController():
                        breeze:bool, arrow:int):
         """Method for printing status message"""
 
-        print(replic['room'].format(room))
-        print(replic['next_room'].format(target))
-        print(replic['arrow_limit'].format(arrow))
+        print(replicas['room'].format(room))
+        print(replicas['next_room'].format(target))
+        print(replicas['arrow_limit'].format(arrow))
 
         if smell:
-            print (replic['smell'])
+            print(replicas['smell'])
         if noise:
-            print(replic['noise'])
+            print(replicas['noise'])
         if breeze:
-            print(replic['breeze'])
+            print(replicas['breeze'])
         print('\n')
 
     def ask_action(self, target:set) -> dict:
@@ -43,77 +43,78 @@ class ConsolController():
 
         while not(move or fire):
 
-            _action = input(replic['action_ask']).lower()
+            _action = input(replicas['action_ask']).lower()
             if _action in {'m', 'м'}:
                 move = True
 
             elif _action in {'f'}:
                 fire = True
             else:
-                print(replic['wrong_answer'])
+                print(replicas['wrong_answer'])
 
         while True:
             if move:
-                print(replic['move_ask'])
+                print(replicas['move_ask'])
             elif fire:
-                print(replic['fire_ask'])
+                print(replicas['fire_ask'])
 
-            _target = input(replic['say_room'])
+            _target = input(replicas['say_room'])
 
             if _target.isdigit():
                 if int(_target) in target:
                     self.target = int(_target)
                     break
                 else:
-                    print(replic['wrong_answer'])
+                    print(replicas['wrong_answer'])
 
             else:
-                print(replic['wrong_answer'])
+                print(replicas['wrong_answer'])
                 continue
 
         return {"move": move, "fire": fire, "target":self.target}
 
-    def event_message(self, **kwards):
+    @staticmethod
+    def event_message(**kwards):
         """Print reaction of game on Player"""
         print('\n')
-        if kwards['vampus_died']:
-            print(replic['vampus_died'])
+        if kwards['wumpus_died']:
+            print(replicas['wumpus_died'])
 
         if kwards['win']:
-            print(replic['win'])
+            print(replicas['win'])
 
         if kwards['bat_detect']:
-            print(replic['arrow_and_bat'])
+            print(replicas['arrow_and_bat'])
 
         if kwards['deep_detect']:
-            print(replic['arrow_down'])
+            print(replicas['arrow_down'])
 
         if kwards['empty_room']:
-            print(replic["empty_room"])
+            print(replicas["empty_room"])
 
-        if kwards['vampus_fear']:
-            print(replic['vampus_move'])
+        if kwards['wumpus_fear']:
+            print(replicas['wumpus_move'])
 
         if kwards['bat_transfer']:
-            print(replic["bat"].format(kwards['bat_transfer']))
+            print(replicas["bat"].format(kwards['bat_transfer']))
 
-        if (kwards['bat_transfer'] and kwards['deep']):
-            print(replic['bat_and_deep'])
-            print(replic['lose'])
+        if kwards['bat_transfer'] and kwards['deep']:
+            print(replicas['bat_and_deep'])
+            print(replicas['lose'])
 
-        if kwards['player_meet_vampus']:
-            print(replic["you_move_in_vampuses_room"])
-            print(replic['lose'])
+        if kwards['player_meet_wumpus']:
+            print(replicas["you_move_in_wumpuses_room"])
+            print(replicas['lose'])
 
-        if kwards['vampus_meet_player']:
-            print(replic["vampus_move_in_your_room"])
-            print(replic['lose'])
+        if kwards['wumpus_meet_player']:
+            print(replicas["wumpus_move_in_your_room"])
+            print(replicas['lose'])
 
         if kwards['deep']:
-            print(replic["deep"])
-            print(replic['lose'])
+            print(replicas["deep"])
+            print(replicas['lose'])
 
         if kwards['no_arrows']:
-            print(replic["no_arrows"])
-            print(replic["lose"])
+            print(replicas["no_arrows"])
+            print(replicas["lose"])
         print('\n')
